@@ -2,15 +2,15 @@
 // From The Nature of Code by Dan Shiffman
 // Nicholas Wolgamott
 
-let Mover;
+let mover;
 
 function setup() {
 	createCanvas(400, 400);
-	Mover = new Mover(200, 200);
+	mover = new Mover(200, 200);
 }
 
 function draw() {
 	background(0);
-	Mover.update();
-	Mover.show();
+	mover.update();
+	mover.show();
 }
