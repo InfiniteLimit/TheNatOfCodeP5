@@ -12,6 +12,24 @@ class Mover {
     this.d = this.r * 2;
   }
 
+  friction() {
+    let diff = height - (this.pos.y + this.r);
+    if (diff < 1) {
+
+      // Direction of Friction
+      let friction = this.vel.copy();
+      friction.normalize();
+      friction.mult(-1);
+
+      // Magnitude of Friction
+      let normal = this.mass;
+      friction.setMag(normal * mu);
+
+      // Apply friction
+      this.applyForce(friction);
+    }
+  }
+
   applyForce(force) {
     let a = p5.Vector.div(force, this.mass);
     this.acc.add(a);
@@ -42,7 +60,6 @@ class Mover {
   update() {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
-    this.edges();
     this.acc.set(0, 0);
   }
 
