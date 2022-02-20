@@ -30,6 +30,20 @@ class Mover {
     }
   }
 
+  drag(c) {
+    // Direction of drag
+    let drag = this.vel.copy();
+    drag.normalize();
+    drag.mult(-1);
+
+    // Magnitude of drag
+    let speedSq = this.vel.magSq();
+    drag.setMag(c * speedSq);
+
+    // Apply drag
+    this.applyForce(drag);
+  }
+
   applyForce(force) {
     let a = p5.Vector.div(force, this.mass);
     this.acc.add(a);
