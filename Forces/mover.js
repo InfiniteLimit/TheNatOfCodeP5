@@ -3,16 +3,18 @@
 // Nicholas Wolgamott
 
 class Mover {
-  constructor(x, y) {
+  constructor(x, y, m) {
     this.pos = createVector(x, y);
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
-    this.r = 16;
+    this.mass = m;
+    this.r = sqrt(this.mass) * 10;
     this.d = this.r * 2;
   }
 
   applyForce(force) {
-    this.acc.add(force);
+    let a = p5.Vector.div(force, this.mass);
+    this.acc.add(a);
   }
 
   edges() {
