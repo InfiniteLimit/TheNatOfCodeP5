@@ -80,10 +80,10 @@ class Mover {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
 
-    this.angleA = this.acc.x / 50;
+    // this.angleA = this.acc.x / 50;
 
-    this.angleV += this.angleA;
-    this.angle += this.angleV;
+    // this.angleV += this.angleA;
+    // this.angle += this.angleV;
     this.acc.set(0, 0);
   }
 
@@ -93,9 +93,12 @@ class Mover {
     fill(255, 100);
     push();
     translate(this.pos.x, this.pos.y);
+    this.angle = this.vel.heading();
     rotate(this.angle);
-    line(0, 0, this.r, 0);
-    ellipse(0, 0, this.d);
+    triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
+
+    // line(-this.r, 0, this.r, 0);
+    // ellipse(0, 0, this.d);
     pop();
   }
 }
