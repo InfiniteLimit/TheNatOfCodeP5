@@ -25,10 +25,10 @@ class Mover {
       this.vel.y *= -1;
     }
 
-    /*if (this.pos.y <= 0) {
-      this.pos.y = 0;
+    if (this.pos.y - this.r <= 0) {
+      this.pos.y = this.r;
       this.vel.y *= -1;
-    }*/
+    }
 
     if (this.pos.x + this.r >= width) {
       this.pos.x = width - this.r;
@@ -42,7 +42,13 @@ class Mover {
   }
 
   update() {
-    this.vel.add(this.acc);
+    // this.vel.add(this.acc);
+
+    // this.angle += 0.1;
+
+    this.vel = p5.Vector.fromAngle(this.angle);
+    // this.vel.mult(5);
+
     this.pos.add(this.vel);
     this.acc.set(0, 0);
   }
@@ -51,6 +57,11 @@ class Mover {
     stroke(255);
     strokeWeight(2);
     fill(255, 100);
-    ellipse(this.pos.x, this.pos.y, this.d);
+    push();
+    translate(this.pos.x, this.pos.y);
+    this.angle = this.vel.heading();
+    rotate(this.angle);
+    triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
+    pop();
   }
 }
