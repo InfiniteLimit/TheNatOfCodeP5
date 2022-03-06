@@ -4,31 +4,24 @@
 
 /// <reference path="c:\\Users\\monke\\.vscode\\extensions\\samplavigne.p5-vscode-1.2.8\\p5types\\global.d.ts" />
 
-let particles = [];
+let emitters = [];
+
+function mousePressed() {
+	emitters.push(new Emitter(mouseX, mouseY));
+}
 
 function setup() {
 	createCanvas(400, 400);
+	emitters[0] = new Emitter(200, 20)
 }
 
 function draw() {
 	background(0);
 
-	for (let i = 0; i < 5; i++) {
-		particles.push(new Particle(200, 20));
-	}
-
-	for (let particle of particles) {
-		let gravity = createVector(0, 0.2);
-		particle.applyForce(gravity);
-
-		particle.update();
-		particle.show();
-	}
-
-	for (let i = particles.length - 1; i >= 0; i--) {
-		if (particles[i].finished()) {
-			particles.splice(i, 1);
-		}
+	for (let emitter of emitters) {
+		emitter.emit(2);
+		emitter.show();
+		emitter.update();
 	}
 
 }
