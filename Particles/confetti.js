@@ -12,7 +12,7 @@ class Confetti extends Particle {
 
   show() {
     noStroke();
-    fill(223, 16, 224, this.lifetime);
+    fill(255, this.lifetime);
     push();
     translate(this.x, this.y);
     rotate(this.angle);

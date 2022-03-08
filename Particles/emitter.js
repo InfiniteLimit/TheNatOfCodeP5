@@ -12,18 +12,18 @@ class Emitter {
 
   emit(num) {
     for (let i = 0; i < num; i++) {
-      if (random(1) > 0.5) {
-        this.particles.push(new Particle(this.position.x, this.position.y));
-      } else {
-        this.particles.push(new Confetti(this.position.x, this.position.y));
-      }
+      this.particles.push(new Particle(this.position.x, this.position.y));
+    }
+  }
+
+  applyForce(force) {
+    for (let particle of this.particles) {
+      particle.applyForce(force);
     }
   }
 
   update() {
     for (let particle of this.particles) {
-      let gravity = createVector(0, 0.2);
-      particle.applyForce(gravity);
       particle.update();
     }
 
