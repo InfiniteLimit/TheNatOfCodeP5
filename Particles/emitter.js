@@ -12,7 +12,11 @@ class Emitter {
 
   emit(num) {
     for (let i = 0; i < num; i++) {
-      this.particles.push(new Particle(this.position.x, this.position.y));
+      if (random(1) > 0.5) {
+        this.particles.push(new Particle(this.position.x, this.position.y));
+      } else {
+        this.particles.push(new Confetti(this.position.x, this.position.y));
+      }
     }
   }
 
