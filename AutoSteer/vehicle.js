@@ -10,8 +10,12 @@ class Vehicle {
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.r = 16;
-    this.maxSpeed = 10;
-    this.maxForce = 0.25;
+    this.maxSpeed = 6;
+    this.maxForce = 0.4;
+  }
+
+  arrive(target) {
+    return this.seek(target, true);
   }
 
   evade(vehicle) {
@@ -36,9 +40,18 @@ class Vehicle {
     return this.seek(target).mult(-1);
   }
 
-  seek(target) {
-    let force = p5.Vector.sub(target, this.pos)
-    force.setMag(this.maxSpeed);
+  seek(target, arrival = false) {
+    let force = p5.Vector.sub(target, this.pos);
+
+    let desiredSpeed = this.maxSpeed;
+    if (arrival) {
+      let slowRadius = 100;
+      let distance = force.mag();
+      if (distance < slowRadius) {
+        desiredSpeed = map(distance, 0, slowRadius, 0, this.maxSpeed);
+      }
+    }
+    force.setMag(desiredSpeed);
     force.sub(this.vel);
     force.limit(this.maxForce);
     return force;
