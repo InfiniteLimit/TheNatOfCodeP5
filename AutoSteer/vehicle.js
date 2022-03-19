@@ -4,6 +4,16 @@
 
 /// <reference path="c:\\Users\\monke\\.vscode\\extensions\\samplavigne.p5-vscode-1.2.8\\p5types\\global.d.ts" />
 
+function findProjection(pos, a, b) {
+  let v1 = p5.Vector.sub(a, pos);
+  let v2 = p5.Vector.sub(b, pos);
+  v2.normalize();
+  let sp = v1.dot(v2);
+  v2.mult(sp);
+  v2.add(pos);
+  return v2;
+}
+
 class Vehicle {
   constructor(x, y) {
     this.pos = createVector(x, y);
@@ -11,11 +21,35 @@ class Vehicle {
     this.acc = createVector(0, 0);
     this.r = 16;
     this.maxSpeed = 4;
-    this.maxForce = 0.2;
+    this.maxForce = 0.1;
     this.wanderTheta = PI / 2;
 
-    this.currentPath = [];
-    this.paths = [this.currentPath];
+    // this.currentPath = [];
+    // this.paths = [this.currentPath];
+  }
+
+  follow(path) {
+    // Predict future position of vehicle
+    let future = this.vel.copy();
+    future.mult(20);
+    future.add(this.pos);
+    fill(255, 0, 0);
+    noStroke();
+    // circle(future.x, future.y, 16);
+
+    // Is the future position on the path, if d < radius it is on the path
+    let target = findProjection(path.start, future, path.end);
+    fill(0, 255, 0);
+    noStroke();
+    // circle(target.x, target.y, 16);
+
+    let d = p5.Vector.dist(future, target);
+
+    if (d > path.radius) {
+      return this.seek(target);
+    } else {
+      return createVector(0, 0);
+    }
   }
 
   wander() {
@@ -92,7 +126,7 @@ class Vehicle {
     this.pos.add(this.vel);
     this.acc.set(0, 0);
 
-    this.currentPath.push(this.pos.copy());
+    // this.currentPath.push(this.pos.copy());
   }
 
   edges() {
@@ -114,11 +148,11 @@ class Vehicle {
       hitEdge = true;
     }
 
-    if (hitEdge) {
-      this.currentPath = [];
-      this.paths.push(this.currentPath);
+    // if (hitEdge) {
+    //   this.currentPath = [];
+    //   this.paths.push(this.currentPath);
 
-    }
+    // }
   }
 
   show() {
@@ -131,14 +165,14 @@ class Vehicle {
     triangle(-this.r, -this.r / 2, -this.r, this.r / 2, this.r, 0);
     pop();
 
-    for (let path of this.paths) {
-      noFill();
-      beginShape();
-      for (let v of path) {
-        vertex(v.x, v.y);
-      }
-      endShape();
-    }
+    // for (let path of this.paths) {
+    //   noFill();
+    //   beginShape();
+    //   for (let v of path) {
+    //     vertex(v.x, v.y);
+    //   }
+    //   endShape();
+    // }
   }
 }
 
