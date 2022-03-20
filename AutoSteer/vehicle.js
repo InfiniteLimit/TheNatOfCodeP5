@@ -17,11 +17,11 @@ function findProjection(pos, a, b) {
 class Vehicle {
   constructor(x, y) {
     this.pos = createVector(x, y);
-    this.vel = createVector(1, 0);
+    this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
     this.r = 16;
-    this.maxSpeed = 4;
-    this.maxForce = 0.1;
+    this.maxSpeed = 10;
+    this.maxForce = 0.2;
     this.wanderTheta = PI / 2;
 
     // this.currentPath = [];
@@ -74,36 +74,36 @@ class Vehicle {
   }
 
   arrive(target) {
-    return this.seek(target, true);
+    return this.seek(target, 'ARRIVE');
   }
 
   evade(vehicle) {
-    let pursuit = this.pursue(vehicle);
-    pursuit.mult(-1);
+    let pursuit = this.pursue(vehicle, 'EVADE');
     return pursuit;
   }
 
-  pursue(vehicle) {
+  pursue(vehicle, mod = '') {
     let target = vehicle.pos.copy();
     let prediction = vehicle.vel.copy();
+    let modification = mod;
     prediction.mult(10);
     target.add(prediction);
 
     // fill(0, 255, 0);
     // circle(target.x, target.y, 16);
 
-    return this.seek(target);
+    return this.seek(target, modification);
   }
 
   flee(target) {
-    return this.seek(target).mult(-1);
+    return this.seek(target, 'FLEE');
   }
 
-  seek(target, arrival = false) {
+  seek(target, modification) {
     let force = p5.Vector.sub(target, this.pos);
 
     let desiredSpeed = this.maxSpeed;
-    if (arrival) {
+    if (modification == 'ARRIVE') {
       let slowRadius = 100;
       let distance = force.mag();
       if (distance < slowRadius) {
@@ -111,6 +111,9 @@ class Vehicle {
       }
     }
     force.setMag(desiredSpeed);
+    if (modification == 'FLEE' || modification == 'EVADE') {
+      force.mult(-1);
+    }
     force.sub(this.vel);
     force.limit(this.maxForce);
     return force;
@@ -181,6 +184,7 @@ class Target extends Vehicle {
     super(x, y);
     this.vel = p5.Vector.random2D();
     this.vel.mult(random(5));
+    this.maxSpeed = 5;
   }
 
   show() {
