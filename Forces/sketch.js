@@ -5,46 +5,41 @@
 let movers = [];
 let mu = 0.1;
 let dragC = 0.2;
-let G = 5;
-let attractor;
+let G = 0.5;
+let sun;
 
 function setup() {
 	createCanvas(600, 600);
 	for (let i = 0; i < 10; i++) {
-		//movers[i] = new Mover(random(width), 200, random(1, 8));
-		let x = random(width);
-		let y = random(height);
-		let m = random(50, 150);
-		movers[i] = new Mover(x, y, m);
+		let pos = p5.Vector.random2D();
+		let vel = pos.copy();
+		vel.setMag(random(10, 15));
+		pos.setMag(random(100, 150));
+		vel.rotate(PI / 2);
+		let m = random(10, 15);
+		movers[i] = new Mover(pos.x, pos.y, m, vel.x, vel.y);
 	}
-	attractor = new Attractor(width / 2, height / 2, 100);
+	sun = new Mover(0, 0, 500, 0, 0);
 	background(0);
 }
 
 function draw() {
-	background(0);
-
-	/*fill(255, 125);
-	noStroke();
-	rect(0, height / 2, width, height / 2);*/
+	background(0, 10);
+	translate(width / 2, height / 2);
 
 	for (let mover of movers) {
-		/*if (mouseIsPressed) {
-			let wind = createVector(0.1, 0);
-			mover.applyForce(wind);
+		sun.attract(mover);
+		for (let other of movers) {
+			if (other != mover) {
+				mover.attract(other);
+			}
 		}
-		let gravity = createVector(0, 0.2);
-		let weight = p5.Vector.mult(gravity, mover.mass);
-		mover.applyForce(weight);
-		mover.friction();
-		if (mover.pos.y > height / 2) {
-			mover.drag(dragC);
-		}*/
-
-		mover.update();
-		// mover.edges();
-		mover.show();
-		attractor.attract(mover);
-		attractor.show();
 	}
+
+	for (let mover of movers) {
+		mover.update();
+		mover.show();
+	}
+
+	// sun.show();
 }

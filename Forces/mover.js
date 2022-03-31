@@ -3,10 +3,9 @@
 // Nicholas Wolgamott
 
 class Mover {
-  constructor(x, y, m) {
+  constructor(x, y, m, vx, vy) {
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D();
-    this.vel.mult(5);
+    this.vel = createVector(vx, vy);
     this.acc = createVector(0, 0);
     this.mass = m;
     this.r = sqrt(this.mass) * 2;
@@ -70,6 +69,14 @@ class Mover {
       this.pos.x = this.r;
       this.vel.x *= -1;
     }
+  }
+
+  attract(mover) {
+    let force = p5.Vector.sub(this.pos, mover.pos);
+    let distanceSq = constrain(force.magSq(), 100, 1000);
+    let strength = G * (this.mass * mover.mass) / distanceSq;
+    force.setMag(strength);
+    mover.applyForce(force);
   }
 
   update() {
